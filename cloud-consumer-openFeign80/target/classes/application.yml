@@ -1,0 +1,20 @@
+server:
+  port: 80
+spring:
+  application:
+    name: cloud-consumer-openFeign
+eureka:
+  client:
+    register-with-eureka: false
+    service-url:
+      defaultZone: http://slave2:7002/eureka/,http://slave1:7001/eureka/
+#设置feign客户端超时时间（openFeign默认支持ribbon）
+ribbon:
+  #建立连接所用的时间，适用于网络正常的情况下，两端连接所用的时间
+  ReadTimeout: 5000
+  #建立连接后，从服务器读取到可用资源所需的时间
+  ConnectTimeout: 5000
+logging:
+  level:
+    #开启feign日志客户端
+    com.master.service.PaymentFeignService: debug

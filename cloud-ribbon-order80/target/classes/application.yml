@@ -1,0 +1,30 @@
+server:
+  #f服务调用端默认端口80，这样写可以直接使用ip地址（网址），不用再外加端口
+  port: 80
+spring:
+  application:
+    name: cloud-ribbon-order-service
+  zipkin:
+    #pom集成zipkin链路追踪，载本地启动zipkin的jar包，访问地址即可查看调用链路
+    base-url: http://localhost:9411
+  sleuth:
+    sampler:
+      probability: 1
+
+eureka:
+  client:
+    register-with-eureka: true #表示是否将自己注册进eureka,默认为true,改服务可以注册进eureka,也可以不注册
+    fetch-registry: true #是否从eureka注册中心获取已有的注册信息，默认true,集群必须设置为true,不然无法使用负载均衡
+    service-url:
+      #defaultZone: http://slave1:7001/eureka #单机
+      defaultZone: http://slave1:7001/eureka,http://slave2:7002/eureka #集群
+  #因为不必须注册进eurekaServer服务器，所以没有必要配置实例，只需要可以访问到注册节点信息就可以了
+  #如果只是单纯的远程调用httpclient，eureka组件也可以不引入
+  #如果需要修改注册到eurekaServer中的实例名称，可以按照以下修改
+  instance:
+    instance-id: ribbon-order80
+    #访问路径可以显示IP地址
+    prefer-ip-address: true
+
+
+

@@ -1,0 +1,45 @@
+server:
+  port: 2001
+spring:
+  application:
+    name: seata-order-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.40.128:3333 #nacos服务注册中心地址
+  #LINUX mysql数据库地址
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.40.128:3306/seata_order?characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useUnicode=true&useSSL=false&serverTimezone=UTC
+    username: ColorXJH
+    password: ColorXJH@LL0425
+#seata客户端配置中心
+#读取nacos上的seata配置，之前是放在file.conf文件中的
+seata:
+  enabled: true #开启seata支持
+  tx-service-group: my_test_tx_group #这里需要和config.txt 文件中的service.vgroupMapping.my_test_tx_group=default一致
+  enable-auto-data-source-proxy: true
+  config:
+    type: nacos
+    nacos:
+      server-addr: 192.168.40.128:3333 #linux seata-server服务地址
+      group : "SEATA_GROUP"
+      namespace: "a1145142-1356-41a8-9d27-031fc93662f1"
+      username: "nacos"
+      password: "nacos"
+
+feign:
+  hystrix:
+    enabled: false
+#防止feign集成的ribbon调用超时
+ribbon:
+  ReadTimeout: 10000
+  ConnectTimeout: 10000
+logging:
+  level:
+    io:
+      seata: info
+
+mybatis:
+  mapperLocations: classpath:mapper/*.xml
+

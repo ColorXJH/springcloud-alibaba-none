@@ -1,0 +1,6 @@
+server:
+  port: 9001
+#在控制台端开启此选项，在被监控端记得增加actuator-starter依赖和在被监控端添加服务监控配置servlet的url/name的注册
+hystrix:
+  dashboard:
+    proxy-stream-allow-list: "*"

@@ -1,0 +1,68 @@
+server:
+  port: 3377
+spring:
+  application:
+    name: nacos-config-client
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.43.15:8848 #nacos服务注册中心地址
+      config:
+        server-addr: 192.168.43.15:8848 #nacos作为配置中心地址
+        file-extension: yaml #指定yaml格式的配置
+        #大型分布式微服务项目会有很多服务子项目，每个字项目又分为开发/测试/部署环境，所以对于配置会使用到
+        #namespace/group/data-id (再nacos客户端界面可以发现)
+        #配置管理新建配置，设置不同的组
+        group: DEV_GROUP
+        #新建命名空间
+        namespace: 4095bb0c-2ffe-4fbe-919a-0f1be2419b40
+
+
+# ${spring.application.name}-${spring.profile.active}.${spring.cloud.nacos.config.file-extension}
+# nacos-config-client-dev.yaml
+# nacos-config-client-test.yaml   ----> config.info
+
+
+#注意nacos持久化
+# 1 单机
+  #单机持久化的时候需要将内置的derby数据库切换为mysql数据库，在nacos/conf文件夹下有application.properties
+  #文件，在该文件内打开关于持久化配置，注意需要启动自己的mysql数据库并且新建schema空间，然后把该文件下的nacos-mysql.sql文件在新创建的shcema数据库下跑一下
+  #初始化所需的各个表，然后在启动项目，就能在mysql中查看到持久化的配置
+
+#2 集群
+  #现在linux系统上安装nginx/mysql 具体操作步骤百度教程，
+  #mysql -uColorXJH -h 192.168.40.128 -p
+  #修改root用户秘密啊，先找到mysql文件夹下的my.conf文件，在里面添加skip-grant-tables
+  #然后重启mysql服务1001  systemctl restart mysqld
+  #命令行输入mysql ->use mysql 进入mysql database,使用命令 alter user 'root'@'localhost' identified by 'ColorXJH@LL0425';修改密码
+  #然后刷新权限 flush privileges,然后退出mysql,去把my.conf刚才配置的跳过表授权注释掉
+  #然后重新重启mysql 服务然后用户名密码登陆mysql
+  #whereis mysql 查看mysql安装路径， which mysql 查询运行文件所在路径
+  #安装完mysql之后启动linux的mysql服务，然后在linux的命令行进入mysql,创建nacos需要的数据库nacos_config
+  #同时创建用户/密码 并赋予相应的权限，然后将conf文件夹下面的nacos-mysql.sql脚本在linux-mysql中执行
+  #创建相应的表
+  #创建nacos集群时：将原先解压的nacos更名问nacos3333,预计建立nacos3333,nacos4444,nacos5555三个文件夹，内容基本相同，只是服务启动的端口不同
+  #修改nacos3333中的application.properties配置，配置持久化数据源，url中添加允许客户端从服务器获取公钥allowPublicKeyRetrieval=true
+  #然后把conf文件夹下的cluster.conf.example复制一份为cluster.conf文件（之前的application.properties.example也复制一份为application.properties）
+  #修改其中的节点配置为本机IP（hostname -I 查询得出）：port，设置三个不同的端口号模拟集群设置
+      #在startupnew.sh中设置本机IP（windows本机ip地址）
+      #新增以下参数设置本机ip地址
+      #JAVA_OPT="${JAVA_OPT} -Dnacos.server.ip=192.168.182.1"
+  #修改好nacos3333之后，复制两份为nacos4444,nacos5555,并分别修改application.properties中的port端口号
+  #然后分别启动bin文件夹中的三个新的startupnew.sh(这个shell脚本修改一下jvm配置内存大小和锁定ip地址)
+  #同时该centos7需要开放3333.4444.5555端口号供外部访问，然后在浏览器中就可以访问三个地址的集群nacos了
+  #他们的配置也会持久化在linux的mysql数据库中的
+
+  #关于nginx负载均衡配置
+  #开放1111端口号作为代理端口，配置nginx查看百度教程
+  #启动nginx:
+  #cd /usr/local/nginx/sbin
+  #./nginx (或者./nginx -c /usr/local/nginx/conf/nginx.conf)
+  #==》http://192.168.40.128:1111/nacos/ 来访问集群了
+
+  #重新启动cloud-alibaba-provider9002 :application.yml中nacos注册地址修改为nginx代理的注册地址
+  #http://192.168.40.128:1111/nacos,然后启动服务
+
+
+
+

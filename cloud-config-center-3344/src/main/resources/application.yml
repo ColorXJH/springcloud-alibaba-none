@@ -1,0 +1,91 @@
+server:
+  port: 3344
+spring:
+  application:
+    name: cloud-config-center3344
+  #增加消息总线配置
+  rabbitmq:
+    port: 5672
+    username: guest
+    password: guest
+    host: localhost
+  cloud:
+    config:
+      server:
+        git:
+          #关于连接github的注释掉的是以https方式连接的，使用的是用户名/密码，明文方式，目前使用的是私钥ssl方式
+          #uri: https://github.com/ColorXJH/spring-cloud-config-demo.git #github上仓库名字
+          uri: git@github.com:ColorXJH/spring-cloud-config-demo.git
+          #搜素目录
+          search-paths:
+            - spring-cloud-config-demo
+          #启动更新
+          #force-pull: true
+          #github用户名/密码
+          #username: ColorXJH
+          #password: 2012WananXJH
+          #skip-ssl-validation: true
+          ignore-local-ssh-settings: true
+          # 私钥的口令, 没有可以不配置
+          #passphrase:
+          #如果key是以 --begin openssh private key --开头，可能导致 invalid private key
+          #使用cmd命令或在git-bash中使用：ssh-keygen -m PEM -t rsa 重新生成旧格式的key即可，然后将该key的公钥
+          #添加到github ssh key中
+          private-key: |
+            -----BEGIN RSA PRIVATE KEY-----
+            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
+            -----END RSA PRIVATE KEY-----
+      #读取分支
+      #一下目前没问题，有可能是一个问题
+      #从2020年几月份开始，github上的master分支变为了mian分支。因此yml中读取分支的配置应该是：label: main
+      label: master
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://slave1:7001/eureka/
+  instance:
+    instance-id: spring-cloud-config3344
+    prefer-ip-address: true
+#服务端暴露监控端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "bus-refresh"

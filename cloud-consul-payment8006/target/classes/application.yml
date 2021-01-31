@@ -1,0 +1,20 @@
+server:
+  port: 8006
+spring:
+  application:
+    name: consul-provider-payment
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        service-name: ${spring.application.name}
+      #hostname:127.0.0.1
+      #注意：consul自带一个客户端consul.exe，在windows下安装即可，在下载好之后需要在环境变量中
+      #配置consul客户端的路径，在cmd输入consul --version，出现版本号表示成功
+      #启动服务：cmd控制台输入：consul agent -dev
+      #进入: http://localhost:8500 查看结果
+      #consul类似于nacos,nacos更为方便，网页自动访问客户端，
+      #consul需要些server,安装client
+      #eureka需要写server/client
+      #nacos只需要写server

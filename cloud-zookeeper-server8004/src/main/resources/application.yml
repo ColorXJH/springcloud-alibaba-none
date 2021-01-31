@@ -1,0 +1,31 @@
+server:
+  #注册到zookeeper服务器的支付服务提供者端口号
+  port: 8004
+#服务别名--注册到zookeeper注册中心名称
+spring:
+  application:
+    name: cloud-provider-payment8004
+  cloud:
+    #可以在windows启动zookeeper,也可以在linux启动zookeeper,注意linux端口需要放行
+    #查询已开放的端口 netstat -anp
+    #查询指定端口是否已开 firewall-cmd --query-port=2181/tcp
+    #添加指定需要开放的端口：
+    #firewall-cmd --add-port=123/tcp --permanent
+    #重载入添加的端口：
+    #firewall-cmd --reload
+    #移除指定端口：
+    #firewall-cmd --permanent --remove-port=123/tcp
+    #查看防火墙状态 systemctl status firewalld
+    #开启防火墙 systemctl start firewalld
+    #关闭防火墙 systemctl stop firewalld
+    #开启防火墙 service firewalld start
+
+    #linux 下启动zookeeper：先上传tar包到/opt 目录下，然后解压到/usr/local/目录下
+    #tar -zxvf zookeeper.tar.gz -C /usr/local/
+    #复制conf下 zoo_sample.cfg 为zoo.cfg,修改端口号为2181
+    #启动zookeeper: 进入bin目录下 ./zkSeever.sh start
+    #进入客户端：./zkCli.sh
+
+    zookeeper:
+      connect-string: 192.168.40.128:2181
+

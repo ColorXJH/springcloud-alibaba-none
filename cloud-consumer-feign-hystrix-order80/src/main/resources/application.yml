@@ -1,0 +1,33 @@
+server:
+  port: 80
+spring:
+  #解决想吐服务名多个feignClient调用情况
+  #https://blog.csdn.net/weixin_41801852/article/details/102967587
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: consumer-feign-hystrix-order80
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: feign-hystrix-order80
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://slave1:7001/eureka/,http://slave2:7002/eureka/
+#设置feign客户端超时时间，openFeign默认支持ribbon
+ribbon:
+  #建立连接所用时间
+  ReadTimeout: 1000
+  #从服务器读取到可用资源所需时间
+  ConnectTimeout: 1000
+
+#如果处理自身的容错就开启，消费者自身的开启方式与服务提供者那边的开启方式不一样
+feign:
+  hystrix:
+    enabled: true
+logging:
+  level:
+    #feign日志以什么级别监控哪个接口(包)
+    com.master.service: debug

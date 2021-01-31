@@ -1,0 +1,25 @@
+server:
+  port: 84
+spring:
+  application:
+    name: nacos-order-consumer
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848 #nacos服务注册发现地址
+    sentinel:
+      transport:
+        port: 8719  #默认8719端口，加入被占用会+1依次扫描，直到找到未被占用的端口
+        dashboard: localhost:8080 #配置sentinel-dashboard流控地址
+
+
+#消费者将要访问的服务提供者的微服务名称（成功注册进nacos的服务提供者微服务名称）
+#注意这个是自定义的配置，并不是组件配置
+service-url:
+  nacos-user-service: http://nacos-provider-payment
+
+
+#激活sentinel对feign的支持
+feign:
+  sentinel:
+    enabled: true

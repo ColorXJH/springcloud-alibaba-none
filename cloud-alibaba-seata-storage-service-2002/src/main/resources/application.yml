@@ -1,0 +1,57 @@
+server:
+  port: 2002
+spring:
+  application:
+    name: seata-storage-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.40.128:3333
+  #LINUX mysql数据库地址
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.40.128:3306/seata_storage?characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useUnicode=true&useSSL=false&serverTimezone=UTC
+    username: ColorXJH
+    password: ColorXJH@LL0425
+
+#读取nacos上的seata配置，之前是放在file.conf文件中的
+seata:
+  enabled: true #开启seata支持
+  tx-service-group: my_test_tx_group #这里需要和config.txt 文件中的service.vgroupMapping.my_test_tx_group=default一致
+  enable-auto-data-source-proxy: true
+  config:
+    type: nacos
+    nacos:
+      server-addr: 192.168.40.128:3333 #linux seata-server服务地址
+      group : "SEATA_GROUP"
+      namespace: "a1145142-1356-41a8-9d27-031fc93662f1"
+      username: "nacos"
+      password: "nacos"
+
+logging:
+  level:
+    io:
+      seata: info
+#防止feign集成的ribbon调用超时
+ribbon:
+  ReadTimeout: 10000
+  ConnectTimeout: 10000
+mybatis:
+  mapperLocations: classpath:mapper/*.xml
+
+
+#seata  failed to req API:/nacos/v1/ns/instance after all servers([192.168.40.128:3333]) tried: ErrCode:500, ErrMsg:java.net.ConnectException: 拒绝连接 (Connection refused)
+#可能是以集群的方式启动了nacos-server,改为单机模式启动就好
+#1：
+#如果下载的是已编译完成的nacos。可以直接加命令启动
+#./bin/startup.sh -m standalone
+
+#2：
+#（本地未编译的项目和已编译的包都有效）
+#添加启动参数-Dnacos.standalone=true
+
+#3：
+#项目启动的main方法里加入如下：
+#System.setProperty("nacos.standalone", "true");
+
+

@@ -1,0 +1,23 @@
+server:
+  port: 7002
+
+eureka:
+  instance:
+    hostname: slave2 #服务端实例名称
+  client:
+    register-with-eureka: false #不向注册中心注册自己
+    fetch-registry: false #false表示自己端就是注册中心，我的职责就是维护服务实例，并不需要去检索服务
+    service-url:
+      #集群指向其他eureka
+      defaultZone: http://slave1:7001/eureka/
+      #单机就是7002自己
+      #defaultZone: http://slave2:7002/eureka/   #设置与eurekaServer交互的地址，查询服务和注册服务都需要依赖这个地址
+  server:
+    #关闭自我保护机制，保证不可用服务被及时踢除,默认true,属于cap中的ap分支
+    #c:一致性 a:可用性 p:分区容错性，cap的原则是最多同时实现两点，三者不可兼得
+    enable-self-preservation: false
+    #eviction-interval-timer-in-ms: 10
+
+
+
+
